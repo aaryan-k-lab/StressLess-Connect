@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>StressLess: Mental Health Journal</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.7/tailwind.min.css"
+    />
+    <link rel="stylesheet" href="smaller-input.css" />
+  </head>
+  <body class="flex min-h-screen">
+    <div class="bg-gray-800 text-gray-100 w-64 flex flex-col items-center">
+      <a href="/" class="text-2xl font-bold mt-8 mb-4">StressLess</a>
+      <nav class="w-full">
+        <ul class="text-lg">
+          <li class="py-2 px-4 hover:bg-gray-700">
+            <a href="#" class="nav-link" data-page="home">Post</a>
+          </li>
+          <li class="py-2 px-4 hover:bg-gray-700">
+            <a href="#" class="nav-link" data-page="contact">My Progress</a>
+          </li>
+          <li class="py-2 px-4 hover:bg-gray-700">
+            <a href="#" class="nav-link" data-page="my-info">My Info</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <div class="flex-grow">
+      <div id="home-page" class="p-8">
+        <h2 class="text-2xl font-bold mb-4">Post Page</h2>
+
+        <!-- Triumphs section -->
+        <form id="triumph-form">
+          <div class="flex justify-between items-center mb-4">
+            <input
+              type="text"
+              placeholder="Type in your triumph"
+              class="w-full mr-2 p-2 border border-gray-500 rounded-lg"
+              id="triumph-input"
+              name="triumph"
+            />
+            <button
+              class="bg-green-500 text-white px-4 py-2 rounded-lg"
+              id="triumph-post-button"
+              type="submit"
+            >
+              Post
+            </button>
+          </div>
+        </form>
+
+        <!-- Problems section -->
+        <form id="problem-form">
+          <div class="flex justify-between items-center">
+            <input
+              type="text"
+              placeholder="Type in your problem"
+              class="w-full mr-2 p-2 border border-gray-500 rounded-lg"
+              id="problem-input"
+              name="problem"
+            />
+            <button
+              class="bg-red-500 text-white px-4 py-2 rounded-lg"
+              id="problem-post-button"
+              type="submit"
+            >
+              Post
+            </button>
+          </div>
+        </form>
+
+        <!-- Display section -->
+        <div id="display-section" class="mt-8">
+          <!-- This is where the posts will be displayed -->
+        </div>
+      </div>
+
+      <div id="contact-page" class="p-8">
+        <h2 class="text-2xl font-bold mb-4">My Progress</h2>
+        <button
+          id="generate-report-button"
+          class="bg-blue-500 text-white px-4 py-2 rounded-lg"
+        >
+          Generate Report
+        </button>
+        <div id="report-section"></div>
+      </div>
+
+      <div id="my-info-section" class="mt-8" method="post">
+        <h3 class="text-lg font-bold mb-4 to-right">My Info</h3>
+        <div>
+          <label for="name-input" class="block font-medium mb-2 to-right"
+            >Name</label
+          >
+          <input
+            type="text"
+            id="name-input"
+            class="border border-gray-500 rounded-lg px-4 py-2 w-full smaller-input"
+            placeholder="Enter your name"
+          />
+        </div>
+
+        <div class="mt-4">
+          <label for="age-input" class="block font-medium mb-2 to-right"
+            >Age</label
+          >
+          <input
+            type="number"
+            id="age-input"
+            class="border border-gray-500 rounded-lg px-4 py-2 w-full smaller-input"
+            placeholder="Enter your age"
+          />
+        </div>
+        <div class="mt-4">
+          <label for="gender-select" class="block font-medium mb-2 to-right"
+            >Gender</label
+          >
+          <select
+            id="gender-select"
+            class="border border-gray-500 rounded-lg px-4 py-2 w-full smaller-input"
+          >
+            <option value="">Select your gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <script>
+      const navLinks = document.querySelectorAll(".nav-link");
+      const pages = document.querySelectorAll(".flex-grow > div");
+      navLinks.forEach((navLink) => {
+        navLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          const pageId = navLink.dataset.page;
+          pages.forEach((page) => {
+            if (page.id === `${pageId}-page`) {
+              page.classList.remove("hidden");
+            } else {
+              page.classList.add("hidden");
+            }
+          });
+          if (pageId === "my-info") {
+            myInfoSection.classList.remove("hidden");
+          } else {
+            myInfoSection.classList.add("hidden");
+          }
+        });
+      });
+      const triumphForm = document.querySelector("#triumph-form");
+      const problemForm = document.querySelector("#problem-form");
+
+      triumphForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const triumphInput = document.querySelector("#triumph-input");
+        const formData = new FormData(triumphForm);
+        const triumph = formData.get("triumph");
+        // Do something with triumph value, such as sending it to the server
+      });
+
+      problemForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const problemInput = document.querySelector("#problem-input");
+        const formData = new FormData(problemForm);
+        const problem = formData.get("problem");
+        // Do something with problem value, such as sending it to the server
+      });
+      const triumphInput = document.getElementById("triumph-input");
+      const triumphPostButton = document.getElementById("triumph-post-button");
+      const problemInput = document.getElementById("problem-input");
+      const problemPostButton = document.getElementById("problem-post-button");
+      const displaySection = document.getElementById("display-section");
+
+      const storeTriumphsAndProblems = () => {
+        const triumphs = JSON.parse(localStorage.getItem("triumphs")) || [];
+        const problems = JSON.parse(localStorage.getItem("problems")) || [];
+
+        triumphs.forEach((triumph) => {
+          const postTime = new Date(triumph.time).toLocaleString();
+          const post = `<div class="bg-green-100 p-4 rounded-lg mb-4">${triumph.text} <span class="text-gray-400 text-sm">${postTime}</span></div>`;
+          displaySection.insertAdjacentHTML("beforeend", post);
+        });
+
+        problems.forEach((problem) => {
+          const postTime = new Date(problem.time).toLocaleString();
+          const post = `<div class="bg-red-100 p-4 rounded-lg mb-4">${problem.text} <span class="text-gray-400 text-sm">${postTime}</span></div>`;
+          displaySection.insertAdjacentHTML("beforeend", post);
+        });
+      };
+
+      const addTriumph = (text) => {
+        const postTime = new Date().toISOString();
+        const triumphs = JSON.parse(localStorage.getItem("triumphs")) || [];
+        triumphs.push({ text, time: postTime });
+        localStorage.setItem("triumphs", JSON.stringify(triumphs));
+
+        const post = `<div class="bg-green-100 p-4 rounded-lg mb-4">${text} <span class="text-gray-400 text-sm">${new Date(
+          postTime
+        ).toLocaleString()}</span></div>`;
+        displaySection.insertAdjacentHTML("beforeend", post);
+      };
+
+      const addProblem = (text) => {
+        const postTime = new Date().toISOString();
+        const problems = JSON.parse(localStorage.getItem("problems")) || [];
+        problems.push({ text, time: postTime });
+        localStorage.setItem("problems", JSON.stringify(problems));
+
+        const post = `<div class="bg-red-100 p-4 rounded-lg mb-4">${text} <span class="text-gray-400 text-sm">${new Date(
+          postTime
+        ).toLocaleString()}</span></div>`;
+        displaySection.insertAdjacentHTML("beforeend", post);
+      };
+
+      triumphPostButton.addEventListener("click", () => {
+        addTriumph(triumphInput.value);
+        triumphInput.value = "";
+      });
+
+      problemPostButton.addEventListener("click", () => {
+        addProblem(problemInput.value);
+        problemInput.value = "";
+      });
+
+      storeTriumphsAndProblems();
+
+      const nameInput = document.getElementById("name-input");
+      const ageInput = document.getElementById("age-input");
+      const genderSelect = document.getElementById("gender-select");
+
+      const storedName = localStorage.getItem("name");
+      if (storedName) {
+        nameInput.value = storedName;
+      }
+
+      const storedAge = localStorage.getItem("age");
+      if (storedAge) {
+        ageInput.value = storedAge;
+      }
+
+      const storedGender = localStorage.getItem("gender");
+      if (storedGender) {
+        genderSelect.value = storedGender;
+      }
+
+      // Store My Info values in local storage when form changes
+      const myInfoSection = document.getElementById("my-info-section");
+      myInfoSection.addEventListener("change", () => {
+        localStorage.setItem("name", nameInput.value);
+        localStorage.setItem("age", ageInput.value);
+        localStorage.setItem("gender", genderSelect.value);
+      });
+
+      const problemPosts = document.querySelectorAll(".problem-post");
+      const triumphPosts = document.querySelectorAll(".triumph-post");
+      const problemTexts = Array.from(problemPosts).map(
+        (post) => post.textContent
+      );
+      const triumphTexts = Array.from(triumphPosts).map(
+        (post) => post.textContent
+      );
+
+      const generateReportButton = document.getElementById(
+        "generate-report-button"
+      );
+      generateReportButton.addEventListener("click", async () => {
+        // Scrape posts from the DOM
+        const problemPosts = document.querySelectorAll(".problem-post");
+        const triumphPosts = document.querySelectorAll(".triumph-post");
+        const problemTexts = Array.from(problemPosts).map(
+          (post) => post.textContent
+        );
+        const triumphTexts = Array.from(triumphPosts).map(
+          (post) => post.textContent
+        );
+
+        // Use the OpenAI API to generate the report
+        const openai = require("openai")(
+          "sk-3WHwtd8uNxTN9sksBlqJT3BlbkFJkD5oqOPl7L4CJwHkfYJ3s"
+        );
+        const prompt = `Viewing the user's problem and triumph posts, identify the main patterns in the user's triumphs and problems and generate potential solutions to the problems.\n\nProblems:\n${problemTexts.join(
+          "\n"
+        )}\n\nTriumphs:\n${triumphTexts.join("\n")}\n\nReport:`;
+        const model = "text-davinci-002";
+        const completions = await openai.complete({
+          engine: model,
+          prompt,
+          maxTokens: 128,
+          n: 1,
+          stop: "\n\n",
+          temperature: 0.7,
+        });
+        const report = completions.choices[0].text.trim();
+
+        // Display the report on the page
+        const reportSection = document.getElementById("report-section");
+        reportSection.textContent = report;
+      });
+    </script>
+  </body>
+</html>
